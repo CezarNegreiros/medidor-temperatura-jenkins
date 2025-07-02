@@ -1,13 +1,13 @@
 pipeline {
-  agent any                      // Jenkins master ou nó agente
+  agent any
   options {
-    timestamps()                 // logs com data/hora
+    timestamps()
     buildDiscarder(logRotator(numToKeepStr: '10'))
   }
 
   triggers {
-    cron('H 2 * * *')            // nightly: todo dia ~02:00 (Cenário 4)
-    githubPush()                 // dispara em cada push / PR
+    cron('H 2 * * *')        // nightly
+    githubPush()             // webhook
   }
 
   stages {
@@ -38,17 +38,21 @@ pipeline {
     }
 
     stage('Test — suíte') {
-        steps {
-            script {
-                docker.image('proj-test').inside {
-                    sh 'pytest -q --junitxml test-results/results.xml || true'
-                }
-            }
+      steps {
+        script {
+          docker.image('proj-test').inside {
+            // continua mesmo que haja falha → JUnit decide se fica UNSATBLE
+            sh 'pytest -q --junitxml test-results/results.xml || true'
+          }
         }
-        post {
-            always { junit 'test-results/results.xml' }
+      }
+      post {
+        always {
+          junit 'test-results/results.xml'
         }
+      }
     }
+  }
 
   post {
     success  { echo '🎉 Pipeline OK — build+test passaram.' }
