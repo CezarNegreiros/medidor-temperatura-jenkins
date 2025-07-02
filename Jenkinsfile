@@ -6,7 +6,7 @@ pipeline {
   }
 
   triggers {
-    cron('*/2 * * * *')       // nightly
+    cron('H/2 * * * *')       // nightly
     githubPush()             // webhook
   }
 
