@@ -1,3 +1,9 @@
+properties([
+  pipelineTriggers([
+    cron('H/2 * * * *')          // cron válido
+  ])
+])
+
 pipeline {
   agent any
   options {
