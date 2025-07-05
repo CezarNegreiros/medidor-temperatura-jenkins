@@ -1,0 +1,5 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY src/ src/
+RUN python -m py_compile $(git ls-files '*.py' || find src -name '*.py')
+CMD ["echo", "Build step finished ✔"]
