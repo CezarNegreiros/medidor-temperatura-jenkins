@@ -1,4 +1,4 @@
-from src.temperatura import f_to_c, c_to_f
+from src.temperatura import c_to_f, f_to_c
 
 
 def test_f_to_c():
